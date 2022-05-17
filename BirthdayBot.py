@@ -1,7 +1,6 @@
 import discord, asyncio
 import os
 import random
-import emoji
 import json, datetime
 from discord.ext import commands, tasks
 from itertools import cycle
@@ -46,11 +45,11 @@ async def add(ctx, member: discord.Member, birthDate):
     Adds member and birthdate to bday list.
     Use: .add @MEMBER BIRTHDATE
     '''
-    with open('bdays.json', 'r') as f:
+    with open('birthdays.json', 'r') as f:
         data = json.load(f)
-    data[str(birthDate)] = member.name # Ex: "1-27": "DREWPER5ON"
+    data[str(birthDate)] = member.name # Ex: "1-27": "NAME"
     
-    with open('bdays.json', 'w') as f:
+    with open('birthdays.json', 'w') as f:
         json.dump(data, f, indent = 4, sort_keys = True)
     
 
@@ -61,20 +60,20 @@ async def delete(ctx, member: discord.Member, birthDate):
     Removes member and birthdate from bday list. 
     Use: .delete @MEMBER BIRTHDATE
     '''
-    with open('bdays.json', 'r') as f:
+    with open('birthdays.json', 'r') as f:
         data = json.load(f)
     data[str(birthDate)] = member.name
     
     del (data[birthDate])
     
-    with open('bdays.json', 'w') as f:
+    with open('birthdays.json', 'w') as f:
         json.dump(data, f, indent = 4, sort_keys = True)
 
 
 @client.command(aliases = ['bdayList', 'birthdaylist','birthdays','list'])
 async def birthdayList(ctx):
     '''List of all birthdays starting from Jan. to Dec.'''
-    with open('bdays.json', 'r') as f:
+    with open('birthdays.json', 'r') as f:
         data = json.load(f)
     
     await ctx.send(json.dumps(data, indent = 4, sort_keys = True))
@@ -85,11 +84,11 @@ async def birthdayThisMonth(ctx):
     '''All the birthdays this month.'''
     today = datetime.date.today() # Ex: datetime.date(2021, 1, 4)
     strMonth = (str(today.month)) # Ex: "1" for month of Dec.
-    with open('bdays.json', 'r') as f:
+    with open('birthdays.json', 'r') as f:
         data = json.load(f)
     
     y = list(data.keys()) # Ex: ['1-27','date2','date3', ...]
-    z = list(data.items()) # Ex: [('1-27', 'DREWPER5ON'), ('date2','user2'), ...]
+    z = list(data.items()) # Ex: [('1-27', 'MEMBER'), ('date2','MEMBER2'), ...]
 
     # t is set to the current month's date
     t = today.month
@@ -107,11 +106,11 @@ async def birthdayNextMonth(ctx):
         nextMonth = 1
     
     strNextMonth = (str(nextMonth)) # Ex: Dec. the 12th month would give '1'
-    with open('bdays.json', 'r') as f:
+    with open('birthdays.json', 'r') as f:
         data = json.load(f)
     
     y = list(data.keys()) # Ex: ['1-27','date2','date3', ...]
-    z = list(data.items()) # Ex: [('1-27', 'DREWPER5ON'), ('date2','user2'), ...]
+    z = list(data.items()) # Ex: [('1-27', 'MEMBER'), ('date2','MEMBER2'), ...]
 
     for item in z:
         if strNextMonth in item[0][0]:
@@ -130,11 +129,11 @@ async def happyBirthday():
         today = datetime.date.today() # Ex: datetime.date(2021, 1, 4)
         todaysDate = str(today.month) + '-' + str(today.day) # Example: '12-30'
         
-        with open('bdays.json', 'r') as f:
+        with open('birthdays.json', 'r') as f:
             data = json.load(f)
         
         y = (list(data.keys())) # Ex: ['12-30']
-        z = list(data.items()) # Ex: [('1-27', 'DREWPER5ON')]
+        z = list(data.items()) # Ex: [('1-27', 'MEMBER')]
         
         n = -1
         for birthDate in data:
